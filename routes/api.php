@@ -17,3 +17,5 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Admin', '
     // Rentals
     Route::apiResource('rentals', 'RentalsApiController');
 });
+
+Route::post('/auth/client' , 'Api\V1\Mobile\Client\ClientAuthController@login');

@@ -5,10 +5,12 @@ namespace App\Http\Repositories\Mobile\Auth;
 
 
 use App\Models\User;
+use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+
 
 class JWTAuth implements IJWTAuth
 {
@@ -74,9 +76,10 @@ class JWTAuth implements IJWTAuth
             Response::HTTP_UNAUTHORIZED , 'You are not authorized to use this app' );
     }
 
-    public function signUp($values)
+    public function signUp($values , $roleId)
     {
-        // TODO: Implement signUp() method.
+        $user = $this->user->create($values);
+        $user->roles()->sync($roleId);
     }
 
 
