@@ -36,7 +36,7 @@ class ClientAuthController extends Controller
         $this->auth->signUp($request->all() , $roleId);
 
         return  response()
-        ->setStatusCode(Response::HTTP_CREATED);
+        ->json(null ,Response::HTTP_CREATED);
     }
 
 }

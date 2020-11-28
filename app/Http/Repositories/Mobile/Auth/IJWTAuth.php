@@ -12,4 +12,6 @@ interface IJWTAuth
 
     public function checkPassedRole($passedRole , $userRole);
 
+    public function checkUserStatus($user);
+
 }
