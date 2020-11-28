@@ -56,7 +56,7 @@
             </div>
             <div class="form-group">
                 <label class="required" for="price_per_day">{{ trans('cruds.bike.fields.price_per_day') }}</label>
-                <input class="form-control {{ $errors->has('price_per_day') ? 'is-invalid' : '' }}" type="number" name="price_per_day" id="price_per_day" value="{{ old('price_per_day', $bike->price_per_day) }}" step="0.01" required>
+                <input class="form-control {{ $errors->has('price_per_day') ? 'is-invalid' : '' }}" type="number" name="price_per_day" id="price_per_day" value="{{ old('price_per_day', $bike->price_per_day) }}" step="0.000000000001" required>
                 @if($errors->has('price_per_day'))
                     <div class="invalid-feedback">
                         {{ $errors->first('price_per_day') }}
@@ -66,7 +66,7 @@
             </div>
             <div class="form-group">
                 <label for="height">{{ trans('cruds.bike.fields.height') }}</label>
-                <input class="form-control {{ $errors->has('height') ? 'is-invalid' : '' }}" type="number" name="height" id="height" value="{{ old('height', $bike->height) }}" step="0.01">
+                <input class="form-control {{ $errors->has('height') ? 'is-invalid' : '' }}" type="number" name="height" id="height" value="{{ old('height', $bike->height) }}" step="0.00000000000001">
                 @if($errors->has('height'))
                     <div class="invalid-feedback">
                         {{ $errors->first('height') }}

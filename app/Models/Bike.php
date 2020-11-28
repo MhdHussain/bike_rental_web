@@ -95,4 +95,17 @@ class Bike extends Model implements HasMedia
 
         return $files;
     }
+
+    public function scopeCloseTo($query , $lat , $lng)
+    {
+        return $query->where('quantity' , '>' , 0)->with(['owner'])->whereRaw("
+        ST_Distance_Sphere(
+                point(bikes.longitude,bikes.latitude),
+                point(?, ?)
+            ) * 0.001 < 100
+        ", [
+            $lng,
+            $lat,
+        ])->where('status' , 'Approved')->get();
+    }
 }

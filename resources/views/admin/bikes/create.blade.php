@@ -146,7 +146,7 @@
             </div>
             <div class="form-group">
                 <label class="required" for="latitude">{{ trans('cruds.bike.fields.latitude') }}</label>
-                <input class="form-control {{ $errors->has('latitude') ? 'is-invalid' : '' }}" type="number" name="latitude" id="latitude" value="{{ old('latitude', '') }}" step="0.01" required>
+                <input class="form-control {{ $errors->has('latitude') ? 'is-invalid' : '' }}" type="number" name="latitude" id="latitude" value="{{ old('latitude', '') }}" step="0.0000000000001" required>
                 @if($errors->has('latitude'))
                     <div class="invalid-feedback">
                         {{ $errors->first('latitude') }}
@@ -156,7 +156,7 @@
             </div>
             <div class="form-group">
                 <label class="required" for="longitude">{{ trans('cruds.bike.fields.longitude') }}</label>
-                <input class="form-control {{ $errors->has('longitude') ? 'is-invalid' : '' }}" type="number" name="longitude" id="longitude" value="{{ old('longitude', '') }}" step="0.01" required>
+                <input class="form-control {{ $errors->has('longitude') ? 'is-invalid' : '' }}" type="number" name="longitude" id="longitude" value="{{ old('longitude', '') }}" step="0.0000000000000001" required>
                 @if($errors->has('longitude'))
                     <div class="invalid-feedback">
                         {{ $errors->first('longitude') }}
