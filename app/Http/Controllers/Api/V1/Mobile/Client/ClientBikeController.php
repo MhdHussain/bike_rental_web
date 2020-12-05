@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\Mobile\Client;
 
 use App\Http\Controllers\Controller;
 use App\Http\Repositories\Mobile\Client\IClientBikeRepository;
+use App\Http\Resources\Admin\BikeResource;
 use App\Models\Bike;
 use App\Models\Rental;
 use Illuminate\Http\Request;
@@ -29,7 +30,8 @@ class ClientBikeController extends Controller
                 $request->get('longitude')
                 );
 
-        return response()->json($bikes , Response::HTTP_OK);
+        // return response()->json($bikes , Response::HTTP_OK);
+        return response()->json(BikeResource::collection($bikes) , Response::HTTP_OK);
     }
 
     public function getBike(Bike $bike)

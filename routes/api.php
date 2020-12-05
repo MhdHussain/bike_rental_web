@@ -25,12 +25,14 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Admin', '
 Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Mobile\Client', 'middleware' => ['auth:api']], function () {
 
 
-    Route::post('client/nearby', 'ClientBikeController@getNearbyBikes');
-    Route::get('client/bike/{bike}', 'ClientBikeController@getBike');
+
     Route::get('client/rented', 'ClientBikeController@getRentedBikes');
     Route::post('client/rent/{bike}', 'ClientBikeController@rentBike');
     Route::post('client/return/{rental}', 'ClientBikeController@return');
 });
+
+Route::post('/v1/client/nearby', 'Api\V1\Mobile\Client\ClientBikeController@getNearbyBikes');
+Route::get('/v1/client/bike/{bike}', 'Api\V1\Mobile\Client\ClientBikeController@getBike');
 
 Route::post('/auth/client/login' , 'Api\V1\Mobile\Client\ClientAuthController@login');
 Route::post('/auth/client/signup' , 'Api\V1\Mobile\Client\ClientAuthController@signUp');

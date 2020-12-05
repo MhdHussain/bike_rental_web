@@ -34,7 +34,7 @@ class ClientBikeSqlRepository implements IClientBikeRepository
 
     public function getNearbyBikes($latitude, $longitude)
     {
-        $this->checkAuth();
+        // $this->checkAuth();
 
         return $this->bike->closeTo($latitude , $longitude);
 
