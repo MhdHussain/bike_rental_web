@@ -16,7 +16,12 @@ class PhotosResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'url' =>  URL::to('/') . $this->url
+            // work
+            // 'url' =>  'http://192.168.1.25:8000/storage/' . $this->id . '/' . $this->file_name
+            // home
+            // 'url' =>  'http://192.168.8.149:8000/storage/' . $this->id . '/' . $this->file_name
+            // prod
+            'url' =>  $this->url
         ];
     }
 }

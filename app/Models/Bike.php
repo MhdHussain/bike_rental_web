@@ -102,7 +102,7 @@ class Bike extends Model implements HasMedia
         ST_Distance_Sphere(
                 point(bikes.longitude,bikes.latitude),
                 point(?, ?)
-            ) * 0.001 < 100
+            ) * 0.001 < 1000
         ", [
             $lng,
             $lat,

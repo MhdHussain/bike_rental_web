@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api\V1\Mobile\Client;
 use App\Http\Controllers\Controller;
 use App\Http\Repositories\Mobile\Auth\IJWTAuth;
+use App\Http\Requests\SignupRequest;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,10 +34,10 @@ class ClientAuthController extends Controller
     {
         $roleId = Role::where('title' , 'Client')->first()->id;
 
-        $this->auth->signUp($request->all() , $roleId);
+        $auth = $this->auth->signUp($request , $request->all() , $roleId);
 
         return  response()
-        ->json(null ,Response::HTTP_CREATED);
+        ->json($auth ,Response::HTTP_CREATED);
     }
 
 }

@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api\V1\Mobile\Client;
 use App\Http\Controllers\Controller;
 use App\Http\Repositories\Mobile\Client\IClientBikeRepository;
 use App\Http\Resources\Admin\BikeResource;
+use App\Http\Resources\ClientRentalResource;
 use App\Models\Bike;
 use App\Models\Rental;
 use Illuminate\Http\Request;
@@ -41,12 +42,14 @@ class ClientBikeController extends Controller
 
     public function getRentedBikes(Request $request)
     {
-        return response()->json($this->repository->listRentedBikes() , Response::HTTP_OK);
+        return response()->json(ClientRentalResource::collection($this->repository->listRentedBikes()) , Response::HTTP_OK);
     }
 
     public function rentBike(Request $request , Bike $bike)
     {
-        $this->repository->rentBike($bike , $request->get('count') , $request->get('period'));
+
+        $this->repository->rentBike($bike ,
+        $request->get('count') , $request->get('period'));
 
         return response()->json(null , Response::HTTP_CREATED);
     }

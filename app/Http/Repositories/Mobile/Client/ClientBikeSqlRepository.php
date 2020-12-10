@@ -70,7 +70,7 @@ class ClientBikeSqlRepository implements IClientBikeRepository
           'bike_id' => $bike->id,
           'client_id' => auth()->user()->id,
           'quantity' => $count,
-          'period' => $period,
+          'period_in_days' => $period,
           'amount' => $bike->price_per_day * $count * $period,
           'status' => 'Pending'
         ];

@@ -3,7 +3,7 @@
 
 namespace App\Http\Repositories\Mobile\Auth;
 
-
+use App\Http\Requests\SignupRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +28,7 @@ class JWTAuth implements IJWTAuth
     public function login(Request $request , $email, $password , $expectedRole)
     {
         $currentUser = $this->user->whereEmail(request('email'))->first();
+
         abort_if(!$currentUser, Response::HTTP_NOT_FOUND,
             'wrong email or password');
         abort_if(!Hash::check(request('password'), $currentUser->password),
@@ -62,6 +63,7 @@ class JWTAuth implements IJWTAuth
         $json = json_decode($response->content());
         $role = $currentUser->roles()->first()->title;
 
+
         $this->checkPassedRole($expectedRole , $role);
 
         return response()->json($json);
@@ -75,23 +77,49 @@ class JWTAuth implements IJWTAuth
             Response::HTTP_UNAUTHORIZED , 'You are not authorized to use this app' );
     }
 
-    public function signUp($values , $roleId)
+    public function signUp(Request $request , $values , $roleId)
     {
         $user = $this->user->whereEmail(request('email'))->first();
-        abort_if($user != null , Response::HTTP_NOT_FOUND,
+        abort_if($user != null , Response::HTTP_UNAUTHORIZED,
             'Email is already in use , please use another email or sign in');
 
         $values['status'] = 'Enabled';
 
         $user = $this->user->create($values);
         $user->roles()->sync($roleId);
+
+        // login after signup
+        $client = DB::table('oauth_clients')
+        ->where('password_client', '=', '1')
+        ->first();
+
+        abort_if(!$client, Response::HTTP_BAD_GATEWAY,
+            'something wrong with the client , please contact the admin');
+
+        $data = array(
+            'grant_type' => 'password',
+            'client_id' => $client->id,
+            'client_secret' => $client->secret,
+            'username' => $values['email'],
+            'password' => $values['password'],
+        );
+
+        $request->request->add($data);
+        $req = Request::create('oauth/token', 'POST');
+    //
+        $response = Route::dispatch($req);
+        $authValues = $response->content();
+        $json = json_decode($authValues);
+
+        return $json;
     }
 
     public function checkUserStatus($user)
     {
 
+
         abort_if(strcasecmp("Enabled", $user->status) != 0,
-            Response::HTTP_CONFLICT, "your user has been disabled , please contact the admin.");
+            Response::HTTP_FORBIDDEN, "your user has been disabled , please contact the admin.");
 
     }
 
