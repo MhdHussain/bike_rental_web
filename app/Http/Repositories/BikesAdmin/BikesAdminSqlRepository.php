@@ -165,7 +165,7 @@ class BikesAdminSqlRepository implements IBikesAdminRepository
 
         }
 
-        return view('admin.bikes.edit', compact('owners', 'bike'));
+        return view('admin.bikes.edit', compact('owners', 'bike' , 'isOwner'));
     }
 
     public function updateBike(Bike $bike, $values , $photos)
