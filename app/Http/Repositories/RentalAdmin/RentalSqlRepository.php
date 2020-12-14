@@ -34,15 +34,34 @@ class RentalSqlRepository implements IRentalRepository
         $this->bike = $bike;
     }
 
+    private function isOwner(){
+        return auth()->user()->hasRole('Owner');
+    }
+
     public function allAjax($request)
     {
         abort_if(Gate::denies('rental_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        if ($request->ajax()) {
-            $query = $this->rental::with(['bike', 'client'])
+        $isOwner = $this->isOwner();
+        $query = null;
+        $ownerId = auth()->user()->id;
 
-                ->with('bike.owner')
-                ->select(sprintf('%s.*', (new Rental)->table));
+        if ($request->ajax()) {
+            if($isOwner){
+                $ownerId = auth()->user()->id;
+                $query = $this->rental::whereHas('bike' , function($q) use($ownerId){
+                    $q->where('owner_id' , $ownerId);
+                } )->with(['bike', 'client'])
+
+                    ->with('bike.owner')
+                    ->select(sprintf('%s.*', (new Rental)->table));
+            }else{
+                $query = $this->rental::with(['bike', 'client'])
+
+                    ->with('bike.owner')
+                    ->select(sprintf('%s.*', (new Rental)->table));
+            }
+
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -101,11 +120,21 @@ class RentalSqlRepository implements IRentalRepository
             return $table->make(true);
         }
 
-        $bikes = $this->bike::all();
+
+        $owners = null;
+        $bikes = null;
+        if($isOwner){
+            $owners= $this->user::where('id' , $ownerId)->get();
+            $bikes = $this->bike::where('owner_id' , $ownerId)->get();
+        }else{
+            $owners = $this->user::all();
+            $bikes = $this->bike::all();
+        }
+
 
         //TODO: show based on role
         $users = $this->user::all();
-        $owners = $this->user::All();
+
 
         return view('admin.rentals.index', compact('bikes', 'users' , 'owners'));
     }
