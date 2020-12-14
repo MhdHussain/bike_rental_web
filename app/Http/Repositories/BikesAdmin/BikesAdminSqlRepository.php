@@ -28,12 +28,26 @@ class BikesAdminSqlRepository implements IBikesAdminRepository
         $this->user = $user;
     }
 
+    private function isOwner(){
+        return auth()->user()->hasRole('Owner');
+    }
     public function allAjax($request)
     {
+
         abort_if(Gate::denies('bike_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        $isOwner = $this->isOwner();
+
+        $ownerId = auth()->user()->id;
+        $query = null;
         if ($request->ajax()) {
-            $query = $this->bike::with(['owner'])->select(sprintf('%s.*', (new Bike)->table));
+            if($isOwner){
+
+                $query = $this->bike::where('owner_id' , $ownerId)->with(['owner'])->select(sprintf('%s.*', (new Bike)->table));
+            }else{
+                $query = $this->bike::with(['owner'])->select(sprintf('%s.*', (new Bike)->table));
+            }
+
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -79,7 +93,13 @@ class BikesAdminSqlRepository implements IBikesAdminRepository
             return $table->make(true);
         }
 
-        $users = $this->user::all();
+        $users = null;
+        if($isOwner){
+            $users = $this->user::where('id' , $ownerId)->get();
+        }else{
+            $users = $this->user::all();
+        }
+
 
         return view('admin.bikes.index', compact('users'));
     }
@@ -97,13 +117,27 @@ class BikesAdminSqlRepository implements IBikesAdminRepository
     {
         abort_if(Gate::denies('bike_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $owners = $this->user->all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $owners = null;
+        $isOwner = $this->isOwner();
 
-        return view('admin.bikes.create', compact('owners'));
+        if($isOwner){
+            $ownerId = auth()->user()->id;
+//            $owners = $this->user->where('id' , $ownerId)->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+            return view('admin.bikes.create', compact( 'ownerId' , 'isOwner'));
+        }else{
+            $owners = $this->user->all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        }
+
+        return view('admin.bikes.create', compact('owners' , 'isOwner'));
     }
 
     public function storeBike($values , $photos)
     {
+        if ($this->isOwner()){
+            $values['status'] = 'Pending';
+            $values['owner_id'] = auth()->user()->id;
+        }
         $bike = $this->bike->create($values);
 
         foreach ($photos as $file) {
@@ -118,9 +152,18 @@ class BikesAdminSqlRepository implements IBikesAdminRepository
     {
         abort_if(Gate::denies('bike_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $owners = User::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $owners = null;
+        $isOwner = $this->isOwner();
+        if($isOwner){
+            $ownerId = auth()->user()->id;
+            return view('admin.bikes.edit', compact( 'ownerId' , 'isOwner' , 'bike'));
+        }else{
 
-        $bike->load('owner');
+            $owners = User::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+            $bike->load('owner');
+
+        }
 
         return view('admin.bikes.edit', compact('owners', 'bike'));
     }

@@ -79,7 +79,7 @@ return [
             'owner_helper'         => ' ',
             'price_per_day'        => 'Price Per Day',
             'price_per_day_helper' => ' ',
-            'height'               => 'Height',
+            'height'               => 'Height in CM',
             'height_helper'        => ' ',
             'front_light'          => 'Front Light',
             'front_light_helper'   => ' ',

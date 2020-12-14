@@ -21,10 +21,7 @@ class StoreBikeRequest extends FormRequest
                 'string',
                 'required',
             ],
-            'owner_id'      => [
-                'required',
-                'integer',
-            ],
+
             'description'   => [
                 'required',
             ],
@@ -40,9 +37,7 @@ class StoreBikeRequest extends FormRequest
             'height'        => [
                 'numeric',
             ],
-            'status'        => [
-                'required',
-            ],
+
             'latitude'      => [
                 'numeric',
                 'required',

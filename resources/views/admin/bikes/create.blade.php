@@ -19,20 +19,24 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.bike.fields.brand_helper') }}</span>
             </div>
-            <div class="form-group">
-                <label class="required" for="owner_id">{{ trans('cruds.bike.fields.owner') }}</label>
-                <select class="form-control select2 {{ $errors->has('owner') ? 'is-invalid' : '' }}" name="owner_id" id="owner_id" required>
-                    @foreach($owners as $id => $owner)
-                        <option value="{{ $id }}" {{ old('owner_id') == $id ? 'selected' : '' }}>{{ $owner }}</option>
-                    @endforeach
-                </select>
-                @if($errors->has('owner'))
-                    <div class="invalid-feedback">
-                        {{ $errors->first('owner') }}
-                    </div>
-                @endif
-                <span class="help-block">{{ trans('cruds.bike.fields.owner_helper') }}</span>
-            </div>
+            @if (!$isOwner)
+                <div class="form-group">
+                    <label class="required" for="owner_id">{{ trans('cruds.bike.fields.owner') }}</label>
+                    <select class="form-control select2 {{ $errors->has('owner') ? 'is-invalid' : '' }}"
+                            name="owner_id" id="owner_id" required >
+                        @foreach($owners as $id => $owner)
+                            <option value="{{ $id }}" {{ old('owner_id') ? 'selected' : '' }}>{{ $owner }}</option>
+                        @endforeach
+                    </select>
+                    @if($errors->has('owner'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('owner') }}
+                        </div>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.bike.fields.owner_helper') }}</span>
+                </div>
+            @endif
+
             <div class="form-group">
                 <label class="required" for="description">{{ trans('cruds.bike.fields.description') }}</label>
                 <textarea class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}" name="description" id="description" required>{{ old('description') }}</textarea>
@@ -129,21 +133,24 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.bike.fields.photos_helper') }}</span>
             </div>
-            <div class="form-group">
-                <label class="required">{{ trans('cruds.bike.fields.status') }}</label>
-                <select class="form-control {{ $errors->has('status') ? 'is-invalid' : '' }}" name="status" id="status" required>
-                    <option value disabled {{ old('status', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
-                    @foreach(App\Models\Bike::STATUS_SELECT as $key => $label)
-                        <option value="{{ $key }}" {{ old('status', 'Pending') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
-                    @endforeach
-                </select>
-                @if($errors->has('status'))
-                    <div class="invalid-feedback">
-                        {{ $errors->first('status') }}
-                    </div>
-                @endif
-                <span class="help-block">{{ trans('cruds.bike.fields.status_helper') }}</span>
-            </div>
+            @if (!$isOwner)
+                <div class="form-group">
+                    <label class="required">{{ trans('cruds.bike.fields.status') }}</label>
+                    <select class="form-control {{ $errors->has('status') ? 'is-invalid' : '' }}" name="status" id="status" required>
+                        <option value disabled {{ old('status', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
+                        @foreach(App\Models\Bike::STATUS_SELECT as $key => $label)
+                            <option value="{{ $key }}" {{ old('status', 'Pending') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                    @if($errors->has('status'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('status') }}
+                        </div>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.bike.fields.status_helper') }}</span>
+                </div>
+            @endif
+
             <div class="form-group">
                 <label class="required" for="latitude">{{ trans('cruds.bike.fields.latitude') }}</label>
                 <input class="form-control {{ $errors->has('latitude') ? 'is-invalid' : '' }}" type="number" name="latitude" id="latitude" value="{{ old('latitude', '') }}" step="0.0000000000001" required>
