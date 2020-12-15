@@ -9,7 +9,7 @@ class CreateBikesTable extends Migration
     public function up()
     {
         Schema::create('bikes', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->decimal('price_per_day', 15, 2);
             $table->float('height', 15, 2)->nullable();
             $table->string('front_light')->nullable();

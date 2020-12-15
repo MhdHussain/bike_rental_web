@@ -9,7 +9,7 @@ class CreateRentalsTable extends Migration
     public function up()
     {
         Schema::create('rentals', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->integer('quantity')->nullable();
             $table->string('period_in_days')->nullable();
             $table->decimal('amount', 15, 2)->nullable();
