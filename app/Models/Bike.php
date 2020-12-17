@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\Models\Media;
@@ -110,14 +111,25 @@ class Bike extends Model implements HasMedia
         // ])->where('status' , 'Approved')->get();
 
         // this code works for postgres
-        return $query->where('quantity' , '>' , 0)->with(['owner'])->whereRaw("
-        ST_DistanceSphere(
-            st_pointn(bikes.longitude,bikes.latitude),
-            st_pointn(?, ?)
-            ) * 0.001 < 1000
-        ", [
-            $lng,
-            $lat,
-        ])->where('status' , 'Approved')->get();
+        $gr_circle_radius = 6371;
+        $max_distance = 500;
+
+        $distance_select = sprintf(
+                                      "
+                                      ( %d * acos( cos( radians(%s) ) " .
+                                              " * cos( radians( lat ) ) " .
+                                              " * cos( radians( long ) - radians(%s) ) " .
+                                              " + sin( radians(%s) ) * sin( radians( lat ) ) " .
+                                          " ) " .
+                                      ")
+                                       ",
+                                      $gr_circle_radius,
+                                      $lat,
+                                      $lng,
+                                      $lat
+                                     );
+        return $query->where('quantity' , '>' , 0)->with(['owner'])->
+        having(DB::raw($distance_select) , '<=' , $max_distance)
+        ->where('status' , 'Approved')->get();
     }
 }
