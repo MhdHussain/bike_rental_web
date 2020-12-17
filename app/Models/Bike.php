@@ -130,6 +130,8 @@ class Bike extends Model implements HasMedia
                                      );
         return $query->where('quantity' , '>' , 0)->with(['owner'])->
         having(DB::raw($distance_select) , '<=' , $max_distance)
-        ->where('status' , 'Approved')->get();
+        ->where('status' , 'Approved')
+        ->groupBy('bikes.id')
+        ->get();
     }
 }
