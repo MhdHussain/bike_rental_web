@@ -98,8 +98,20 @@ class Bike extends Model implements HasMedia
 
     public function scopeCloseTo($query , $lat , $lng)
     {
+        // works for mysql not for postgres
+        // return $query->where('quantity' , '>' , 0)->with(['owner'])->whereRaw("
+        // ST_Distance_Sphere(
+        //         point(bikes.longitude,bikes.latitude),
+        //         point(?, ?)
+        //     ) * 0.001 < 1000
+        // ", [
+        //     $lng,
+        //     $lat,
+        // ])->where('status' , 'Approved')->get();
+
+        // this code works for postgres
         return $query->where('quantity' , '>' , 0)->with(['owner'])->whereRaw("
-        ST_Distance_Sphere(
+        ST_DistanceSphere(
                 point(bikes.longitude,bikes.latitude),
                 point(?, ?)
             ) * 0.001 < 1000
