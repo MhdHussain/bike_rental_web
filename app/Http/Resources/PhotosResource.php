@@ -21,7 +21,7 @@ class PhotosResource extends JsonResource
             // home
             // 'url' =>  'http://192.168.8.149:8000/storage/' . $this->id . '/' . $this->file_name
             // prod
-             'url' =>  $this->url
+             'url' =>  URL::to($this->url)
         ];
     }
 }

@@ -23,7 +23,7 @@ class BikeResource extends JsonResource
             'speed_sensor' => $this->speed_sensor,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
-            'photos' => $this->photos
+            'photos' => PhotosResource::collection($this->photos)
         ];
     }
 }
