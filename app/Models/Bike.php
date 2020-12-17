@@ -117,8 +117,8 @@ class Bike extends Model implements HasMedia
         $distance_select = sprintf(
                                       "
                                       ( %d * acos( cos( radians(%s) ) " .
-                                              " * cos( radians( lat ) ) " .
-                                              " * cos( radians( long ) - radians(%s) ) " .
+                                              " * cos( radians( bikes.latitude ) ) " .
+                                              " * cos( radians( bikes.longitude ) - radians(%s) ) " .
                                               " + sin( radians(%s) ) * sin( radians( lat ) ) " .
                                           " ) " .
                                       ")
