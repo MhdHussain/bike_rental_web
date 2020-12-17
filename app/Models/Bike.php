@@ -119,7 +119,7 @@ class Bike extends Model implements HasMedia
                                       ( %d * acos( cos( radians(%s) ) " .
                                               " * cos( radians( bikes.latitude ) ) " .
                                               " * cos( radians( bikes.longitude ) - radians(%s) ) " .
-                                              " + sin( radians(%s) ) * sin( radians( lat ) ) " .
+                                              " + sin( radians(%s) ) * sin( radians( bikes.latitude ) ) " .
                                           " ) " .
                                       ")
                                        ",
