@@ -112,8 +112,8 @@ class Bike extends Model implements HasMedia
         // this code works for postgres
         return $query->where('quantity' , '>' , 0)->with(['owner'])->whereRaw("
         ST_DistanceSphere(
-            geometry(bikes.longitude,bikes.latitude),
-            geometry(?, ?)
+            st_pointn(bikes.longitude,bikes.latitude),
+            st_pointn(?, ?)
             ) * 0.001 < 1000
         ", [
             $lng,
